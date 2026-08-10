@@ -1,5 +1,5 @@
 // ============================================================
-// gh-minimal-slides — example deck
+// tp-slides-template — example deck
 // Mirrors the JSX reference at /tmp/gh-slides-zip/readme-slides.html
 // slide-by-slide, so the compiled PDF is a quick visual diff target.
 //
@@ -7,9 +7,9 @@
 // ============================================================
 
 #import "@preview/touying:0.7.3": *
-// #import "@preview/gh-minimal-slides:0.1.0" as gh
-#import "./lib.typ" as gh
-#show: gh.register.with(
+// #import "@preview/tp-slides-template:0.1.0" as tp
+#import "./lib.typ" as tp
+#show: tp.register.with(
   theme:   "light",   // try "dark"
   accent:  "telecom",    // try "purple", "green", "pink", "orange", "mono"
   density: "comfy",   // try "compact",
@@ -19,7 +19,7 @@
 // ------------------------------------------------------------
 // 01 — Cover
 // ------------------------------------------------------------
-#gh.cover-slide(
+#tp.cover-slide(
   kicker: "# README.md",
   title: [
     A minimal\
@@ -39,7 +39,7 @@
 // ------------------------------------------------------------
 // 02 — Section divider
 // ------------------------------------------------------------
-#gh.section-slide(
+#tp.section-slide(
   number: "01",
   kicker: "Chapter",
   title: [Getting started],
@@ -48,19 +48,19 @@
 // ------------------------------------------------------------
 // 03 — Content slide
 // ------------------------------------------------------------
-#gh.content-slide(title: [Unordered list])[
+#tp.content-slide(title: [Unordered list])[
 - Render with normal Typst list markup.
 - Nested items use indentation.
   - No custom item tuple syntax needed.
   - No extra slide helper needed.
 - Mix freely with prose, like `npm install`.
-- Links inherit the accent color — #gh.gh-link[see reference →]
+- Links inherit the accent color — #tp.gh-link[see reference →]
 ]
 
 // ------------------------------------------------------------
 // 04 — Numbered list
 // ------------------------------------------------------------
-#gh.content-slide(title: [Numbered list])[
+#tp.content-slide(title: [Numbered list])[
 + Clone the repository.
 + Install dependencies.
 + Configure the environment.
@@ -70,7 +70,7 @@
 // ------------------------------------------------------------
 // 05 — Blockquote
 // ------------------------------------------------------------
-#gh.quote-slide(
+#tp.quote-slide(
   title: [Blockquote],
   body: [
     Simplicity is prerequisite for reliability. A program that is not
@@ -82,7 +82,7 @@
 // ------------------------------------------------------------
 // 06 — Terminal/code block
 // ------------------------------------------------------------
-#gh.content-slide(title: [Code block])[
+#tp.content-slide(title: [Code block])[
 ```javascript
 import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
@@ -98,7 +98,7 @@ export default defineConfig({
 // ------------------------------------------------------------
 // 07 — Table
 // ------------------------------------------------------------
-#gh.table-slide(
+#tp.table-slide(
   title: [Endpoints],
   headers: ("Method", "Path", "Status", "Description"),
   rows: (
@@ -112,7 +112,7 @@ export default defineConfig({
 // ------------------------------------------------------------
 // 08 — Two-column comparison
 // ------------------------------------------------------------
-#gh.two-col-slide(
+#tp.two-col-slide(
   title: [Before & after],
   left:  ("Before", "danger",  "12m 04s",
           [Sequential builds took upwards of 12 minutes on every push.
@@ -125,16 +125,16 @@ export default defineConfig({
 // ------------------------------------------------------------
 // 09 — Image / figure
 // ------------------------------------------------------------
-#gh.image-slide(
+#tp.image-slide(
   title: [Figure 1 — system overview],
   placeholder-text: "[ architecture diagram — 1680 × 520 ]",
-  caption: [Figure 1. Dataflow through the ingest → transform → serve pipeline. Source: #gh.gh-link[docs/architecture.md]],
+  caption: [Figure 1. Dataflow through the ingest → transform → serve pipeline. Source: #tp.gh-link[docs/architecture.md]],
 )
 
 // ------------------------------------------------------------
 // 10 — Stats grid
 // ------------------------------------------------------------
-#gh.stats-slide(
+#tp.stats-slide(
   title: [Q1 metrics],
   stats: (
     ("1.4M",   "weekly downloads", "12%"),
@@ -147,7 +147,7 @@ export default defineConfig({
 // ------------------------------------------------------------
 // 11 — Task list
 // ------------------------------------------------------------
-#gh.task-slide(
+#tp.task-slide(
   title: [Task list — v1 milestone],
   tasks: (
     (true,  [Draft initial API spec],            "closed · 12 days ago"),
@@ -162,7 +162,7 @@ export default defineConfig({
 // ------------------------------------------------------------
 // 12 — Alerts
 // ------------------------------------------------------------
-#gh.alert-slide(
+#tp.alert-slide(
   title: [Alert callouts],
   alerts: (
     ("NOTE",    "accent",  [Highlights information that users should take into account, even when skimming.]),
@@ -175,7 +175,7 @@ export default defineConfig({
 // ------------------------------------------------------------
 // 13 — Bibliography
 // ------------------------------------------------------------
-#gh.bibliography-slide(
+#tp.bibliography-slide(
   title: [References],
   refs: (
     (
@@ -206,28 +206,28 @@ export default defineConfig({
 // ------------------------------------------------------------
 // 14 — Box system
 // ------------------------------------------------------------
-#gh.content-slide(title: [Box system])[\
-  #gh.theorem-box(title: [Theorem 1 — Central Limit Theorem])[
+#tp.content-slide(title: [Box system])[\
+  #tp.theorem-box(title: [Theorem 1 — Central Limit Theorem])[
     Let $X_1, X_2, dots$ be i.i.d. random variables with mean $mu$ and
     variance $sigma^2$. Then
     $ sqrt(n) (overline(X)_n - mu) arrow.r.double cal(N)(0, sigma^2) $
   ]
 
-  #gh.result-box(title: [Result — Convergence rate])[
+  #tp.result-box(title: [Result — Convergence rate])[
     The Berry–Esseen bound gives
     $sup_x |F_n (x) - Phi(x)| <= C dot rho \/ sigma^3 sqrt(n)$
     where $C < 0.4748$.
   ]
 ]
 
-#gh.content-slide(title: [More boxes])[\
-  #gh.remark-box(title: [Remark])[
+#tp.content-slide(title: [More boxes])[\
+  #tp.remark-box(title: [Remark])[
     The constant $C$ in the Berry–Esseen theorem has been progressively
     tightened since 1941. The best known upper bound is due to
     Shevtsova (2011).
   ]
 
-  #gh.warning-box(title: [Warning — Assumptions])[
+  #tp.warning-box(title: [Warning — Assumptions])[
     The CLT requires finite variance. For heavy-tailed distributions
     (e.g. Cauchy), the theorem does not hold and alternative limit
     theorems involving stable distributions must be used.
@@ -238,7 +238,7 @@ export default defineConfig({
 // 15 — Closing
 // ------------------------------------------------------------
 
-#gh.closing-slide(
+#tp.closing-slide(
   kicker: "## Thanks",
   title: [Questions?],
   links: ("docs/", "issues/", "contact.md"),

@@ -1,11 +1,11 @@
 // ============================================================
-// gh-minimal-slides — GitHub-readme-style slide library for Typst (Touying)
+// tp-slides-template — Télécom Paris themed slide library for Typst (Touying)
 // ------------------------------------------------------------
 // Ported from a React/HTML reference deck. One file, no transitive
 // imports beyond `@preview/touying`. Use it like:
 //
 //   #import "@preview/touying:0.7.3": *
-//   #import "@preview/gh-minimal-slides:0.1.0" as gh
+//   #import "@preview/tp-slides-template:0.1.0" as tp
 //
 //   #show: gh.register.with(theme: "dark", accent: "purple", density: "comfy")
 //
