@@ -1,6 +1,6 @@
 # tp_slides_template
 
-A Telecom Paris themed touying presentation template. Essentially [gh-minimal-slides](https://github.com/xingjian-zhang/gh-minimal-slides), tweaked for my needs.
+A [Télécom Paris](https://en.wikipedia.org/wiki/T%C3%A9l%C3%A9com_Paris) themed touying presentation template. Essentially [gh-minimal-slides](https://github.com/xingjian-zhang/gh-minimal-slides), tweaked for my needs.
 
 Main changes include :
 
