@@ -72,6 +72,35 @@
   pink:   (light: rgb("#bf3989"), dark: rgb("#db61a2")),
   orange: (light: rgb("#bc4c00"), dark: rgb("#db6d28")),
   mono:   (light: rgb("#1f2328"), dark: rgb("#f0f6fc")),
+  telecom: (light: rgb("#BF1238"), dark: rgb("#BF1238")),
+)
+
+// Telecom Paris color scheme — usable standalone or in plots.
+#let tp-colors = (
+  telecom: rgb("#BF1238"),
+  aqua:    rgb("#00A8E0"),
+  gray:    rgb("#5B6770"),
+  olive:   rgb("#8DBE3E"),
+)
+
+// Color cycle array for lilaq: pass to lq.set-diagram(cycle: ..) or
+// use the tp-theme show rule below which does it automatically.
+#let tp-color-cycle = (
+  tp-colors.telecom,
+  tp-colors.aqua,
+  tp-colors.gray,
+  tp-colors.olive,
+)
+
+#let _plot-schemes = (
+  telecom: (
+    series: tp-color-cycle,
+    mesh: gradient.linear((tp-colors.telecom, 0%), (rgb("#C0C0C0"), 50%), (tp-colors.aqua, 100%)),
+  ),
+  github: (
+    series: (rgb("#0969da"), rgb("#1a7f37"), rgb("#bc4c00"), rgb("#6e7681")),
+    mesh: gradient.linear((rgb("#0969da"), 0%), (rgb("#ffffff"), 50%), (rgb("#1a7f37"), 100%)),
+  ),
 )
 
 // ------------------------------------------------------------
@@ -109,23 +138,23 @@
 )
 
 #let _sp-comfy = (
-  pad-top:    112pt,  // 150px
+  pad-top:    58pt,   // reduced — title sits higher
   pad-bottom: 60pt,   // 80px
   pad-x:      90pt,   // 120px
-  title-gap:  39pt,   // 52px
+  title-gap:  28pt,   // reduced
   item-gap:   21pt,   // 28px
   section-gap: 54pt,  // 72px
-  chrome-top: 30pt,   // 40px from top edge
+  chrome-top: 18pt,   // reduced
 )
 
 #let _sp-compact = (
-  pad-top:    97pt,
+  pad-top:    50pt,   // reduced — title sits higher
   pad-bottom: 48pt,
   pad-x:      75pt,
-  title-gap:  30pt,
+  title-gap:  20pt,   // reduced
   item-gap:   15pt,
   section-gap: 42pt,
-  chrome-top: 24pt,
+  chrome-top: 14pt,   // reduced
 )
 
 // ------------------------------------------------------------
@@ -321,16 +350,29 @@
   #body
 ]
 
-#let _h2(body, ctx) = block(
-  width: 100%,
-  inset: (bottom: 6pt),
-  stroke: (bottom: 1pt + ctx.palette.border-muted),
-)[
-  #set text(size: ctx.ts.subtitle, weight: 600, fill: ctx.palette.fg-default,
-            top-edge: "ascender")
-  #set par(leading: 0.45em)
-  #body
-]
+// H2 heading with optional page numbering on the right.
+#let _h2(body, ctx) = context {
+  let resolved-n = utils.slide-counter.get().first()
+  let resolved-total = utils.last-slide-counter.final().first()
+  block(
+    width: 100%,
+    inset: (bottom: 6pt),
+    stroke: (bottom: 1pt + ctx.palette.border-muted),
+  )[
+    #grid(
+      columns: (1fr, auto),
+      align: (left + horizon, right + horizon),
+      {
+        set text(size: ctx.ts.subtitle, weight: 600, fill: ctx.palette.fg-default,
+                 top-edge: "ascender")
+        set par(leading: 0.45em)
+        body
+      },
+      text(font: _font-mono, size: ctx.ts.micro, fill: ctx.palette.fg-subtle,
+        _pad2(resolved-n) + " / " + _pad2(resolved-total)),
+    )
+  ]
+}
 
 // Pill chip used by cover-slide badges.
 #let _pill(body, color: none, ctx: none) = {
@@ -344,44 +386,22 @@
   )
 }
 
-// Top header — deck title left (muted grey), `nn / nn` right (subtle).
-// The deck title comes from register()'s `title` arg and is shared across
-// every chromed slide; per-slide H2 headings remain in the body.
-#let _header(n, total, ctx) = context {
-  let resolved-n = if n == auto { utils.slide-counter.get().first() } else { n }
-  let resolved-total = if total == auto { utils.last-slide-counter.final().first() } else { total }
-  block(width: 100%)[
-    #grid(columns: (1fr, auto), align: (left + horizon, right + horizon),
-      text(size: ctx.ts.micro, fill: ctx.palette.fg-muted, ctx.title),
-      if resolved-n != none and resolved-total != none {
-        text(font: _font-mono, size: ctx.ts.micro, fill: ctx.palette.fg-subtle,
-          _pad2(resolved-n) + " / " + _pad2(resolved-total))
-      } else { [] },
-    )
-  ]
-}
-
-// Generic frame: outer slide insets, optional deck-title header. Body
-// receives the full content area below the header.
+// Generic frame: outer slide insets. Body receives the full content area.
 #let _frame(n: auto, total: auto, body) = context {
   let ctx = _gh-state.get()
-  let show-header = n != none and ctx.title != none
   block(
     width: 100%,
     height: 100%,
     inset: (
-      top:    if show-header { ctx.sp.chrome-top } else { ctx.sp.pad-top },
+      top:    ctx.sp.pad-top,
       bottom: ctx.sp.pad-bottom,
       x:      ctx.sp.pad-x,
     ),
   )[
-    #if show-header {
-      _header(n, total, ctx)
-      v(ctx.sp.pad-top - ctx.sp.chrome-top - ctx.ts.micro - 8pt)
-    }
     #body
   ]
 }
+
 
 // ------------------------------------------------------------
 // 7. SLIDE FUNCTIONS
@@ -397,10 +417,11 @@
 //   "accent", "success" — controls color. Plain strings get "default".
 #let cover-slide(
   title: [A minimal\ readme-style\ slide gallery.],
+  logo: image("pics/telecom.png", width: 30%),
   kicker: "# README.md",
   badges: ("v1.0.0", ("MIT license", "accent"), ("build: passing", "success"), "docs"),
   footer-left: "@author · 2026",
-  footer-right: "↓ scroll  ·  → next",
+  footer-right: [#datetime.today().display("[day]/[month]/[year]")],
 ) = touying-slide-wrapper(self => {
   touying-slide(self: self, context {
     let ctx = _gh-state.get()
@@ -423,8 +444,12 @@
       inset: (top: ctx.sp.pad-top, bottom: ctx.sp.pad-bottom, x: ctx.sp.pad-x),
     )[
       #stack(
-        text(font: _font-mono, size: ctx.ts.micro, fill: ctx.accent,
-             tracking: 0.5pt, kicker),
+        grid(
+          columns: (auto, 1fr),
+          align: (top + left, top + right),
+          text(font: _font-mono, size: ctx.ts.micro, fill: ctx.accent, tracking: 0.5pt, kicker),
+          if logo != none { logo } else { [] },
+        ),
         v(1fr),
         block(width: 100%)[
           #set text(size: ctx.ts.hero, weight: 700, fill: ctx.palette.fg-default,
@@ -755,8 +780,8 @@
 // name (`"accent"`, `"success"`, `"warning"`, `"danger"`) or a custom rgb.
 #let two-col-slide(
   title: [Before & after],
-  left:  ("Before", "danger",  "12m 04s", [Slow.]),
-  right: ("After",  "success", "1m 47s",  [Fast.]),
+  left:  ("Before", "danger",  none, [Slow.]),
+  right: ("After",  "success", none,  [Fast.]),
   n: auto,
   total: auto,
 ) = touying-slide-wrapper(self => {
@@ -775,8 +800,10 @@
           #stack(spacing: 18pt,
             text(font: _font-mono, size: ctx.ts.micro,
                  fill: _semantic-color(color, ctx), tracking: 1pt, upper(k)),
-            text(size: ctx.ts.twocol-stat, font: _font-mono, weight: 700,
-                 fill: ctx.palette.fg-default, stat),
+            if stat!= none {
+              text(size: ctx.ts.twocol-stat, font: _font-mono, weight: 700,
+                 fill: ctx.palette.fg-default, stat)
+            },
             text(size: ctx.ts.small, fill: ctx.palette.fg-muted, body),
           )
         ]
@@ -1105,13 +1132,153 @@
   ))
 })
 
+// 15 — Bibliography / references slide.
+// `refs`: array of dictionaries, each with keys:
+//   - `key`    (str):     citation key, e.g. "1" or "KR2019"
+//   - `title`  (content): paper/book title
+//   - `author` (content): author names
+//   - `year`   (str):     publication year
+//   - `venue`  (content): optional journal/conference name
+//   - `url`    (content): optional DOI or URL
+#let bibliography-slide(
+  title: [References],
+  refs: (),
+  n: auto,
+  total: auto,
+) = touying-slide-wrapper(self => {
+  touying-slide(self: self, _frame(n: n, total: total,
+    context {
+      let ctx = _gh-state.get()
+      stack(
+        _h2(title, ctx),
+        v(ctx.sp.title-gap * 0.5),
+        ..refs.enumerate().map(((i, r)) => {
+          let key = if "key" in r { r.key } else { str(i + 1) }
+          (
+            block(width: 100%, inset: (bottom: 8pt))[
+              #grid(
+                columns: (44pt, 1fr),
+                gutter: 8pt,
+                align: (right + top, left + top),
+                text(font: _font-mono, size: ctx.ts.small, weight: 700,
+                     fill: ctx.accent, "[" + key + "]"),
+                {
+                  set text(size: ctx.ts.small, fill: ctx.palette.fg-default)
+                  set par(leading: 0.45em)
+                  if "author" in r { text(weight: 600, r.author) }
+                  if "author" in r and "year" in r {
+                    text(fill: ctx.palette.fg-muted)[ (]
+                    text(fill: ctx.palette.fg-muted, r.year)
+                    text(fill: ctx.palette.fg-muted)[)]
+                  }
+                  if "title" in r {
+                    linebreak()
+                    text(style: "italic", r.title)
+                  }
+                  if "venue" in r {
+                    text(fill: ctx.palette.fg-muted)[. ]
+                    text(fill: ctx.palette.fg-muted, r.venue)
+                  }
+                  if "url" in r {
+                    linebreak()
+                    text(font: _font-mono, size: ctx.ts.micro, fill: ctx.accent, r.url)
+                  }
+                },
+              )
+            ],
+          )
+        }).flatten(),
+      )
+    }
+  ))
+})
+
+// ----------------------------------------------------------------
+// BOX SYSTEM — reusable callout boxes for any slide
+// ----------------------------------------------------------------
+// Use inside `content-slide`, `math-slide`, or any slide body.
+//
+// Each box has rounded corners, a title section with a slightly darker
+// background, and a content section with a lighter background. Each
+// box type uses a different color from the Telecom Paris color scheme:
+//   - theorem  → telecom red (#BF1238)
+//   - result   → aqua (#00A8E0)
+//   - remark   → olive (#8DBE3E)
+//   - warning  → gray (#5B6770)
+
+#let slide-box(
+  title: none,
+  color: none,
+  body,
+) = context {
+  let ctx = _gh-state.get()
+  let c = if color != none { color } else { ctx.accent }
+
+  // Derive title-bg (darker) and content-bg (lighter) from the color.
+  let title-bg = c.lighten(72%)
+  let content-bg = c.lighten(88%)
+  // In dark theme, darken instead of lighten.
+  if ctx.theme == "dark" {
+    title-bg = c.darken(60%)
+    content-bg = c.darken(75%)
+  }
+
+  block(
+    width: 100%,
+    radius: 8pt,
+    clip: true,
+    stroke: 1pt + c.lighten(40%),
+    above: 14pt,
+    below: 14pt,
+  )[
+    #set block(spacing: 0pt)
+    // Title bar
+    #if title != none {
+      block(
+        width: 100%,
+        fill: title-bg,
+        inset: (x: 20pt, y: 10pt),
+      )[
+        #text(size: ctx.ts.small, weight: 700, fill: c.darken(20%), title)
+      ]
+    }
+    // Content area
+    #block(
+      width: 100%,
+      fill: content-bg,
+      inset: (x: 20pt, y: 14pt),
+    )[
+      #set text(size: ctx.ts.small, fill: ctx.palette.fg-default)
+      #set par(leading: 0.5em)
+      #body
+    ]
+  ]
+}
+
+#let theorem-box(title: [Theorem], body) = slide-box(
+  title: title, color: tp-colors.telecom, body
+)
+
+#let result-box(title: [Result], body) = slide-box(
+  title: title, color: tp-colors.aqua, body
+)
+
+#let remark-box(title: [Remark], body) = slide-box(
+  title: title, color: tp-colors.olive, body
+)
+
+#let warning-box(title: [Warning], body) = slide-box(
+  title: title, color: tp-colors.gray, body
+)
+
 // ------------------------------------------------------------
 // 8. REGISTER — Touying entry point
 // ------------------------------------------------------------
 
+
 #let register(
   theme: "light",          // "light" | "dark"
-  accent: "blue",          // "blue" | "green" | "purple" | "pink" | "orange" | "mono"
+  accent: "telecom",          // "blue" | "green" | "purple" | "pink" | "orange" | "mono"
   density: "comfy",        // "comfy" | "compact"
   aspect-ratio: "16-9",    // "16-9" | "4-3"
   title: none,             // deck title shown as the small grey header on every chromed slide

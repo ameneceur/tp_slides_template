@@ -7,12 +7,13 @@
 // ============================================================
 
 #import "@preview/touying:0.7.3": *
-#import "@preview/gh-minimal-slides:0.1.0" as gh
-
+// #import "@preview/gh-minimal-slides:0.1.0" as gh
+#import "./lib.typ" as gh
 #show: gh.register.with(
   theme:   "light",   // try "dark"
-  accent:  "blue",    // try "purple", "green", "pink", "orange", "mono"
-  density: "comfy",   // try "compact"
+  accent:  "telecom",    // try "purple", "green", "pink", "orange", "mono"
+  density: "comfy",   // try "compact",
+  // title : []
 )
 
 // ------------------------------------------------------------
@@ -32,7 +33,7 @@
     "docs",
   ),
   footer-left: "@author · 2026",
-  footer-right: "↓ scroll  ·  → next",
+  // footer-right: "↓ scroll  ·  → next",
 )
 
 // ------------------------------------------------------------
@@ -172,8 +173,71 @@ export default defineConfig({
 )
 
 // ------------------------------------------------------------
-// 13 — Closing
+// 13 — Bibliography
 // ------------------------------------------------------------
+#gh.bibliography-slide(
+  title: [References],
+  refs: (
+    (
+      key: "1",
+      author: [Shannon, C. E.],
+      year: "1948",
+      title: [A Mathematical Theory of Communication],
+      venue: [Bell System Technical Journal, 27(3), 379–423],
+    ),
+    (
+      key: "2",
+      author: [Goodfellow, I., Bengio, Y., and Courville, A.],
+      year: "2016",
+      title: [Deep Learning],
+      venue: [MIT Press],
+      url: [https://www.deeplearningbook.org],
+    ),
+    (
+      key: "3",
+      author: [Vaswani, A. et al.],
+      year: "2017",
+      title: [Attention Is All You Need],
+      venue: [NeurIPS 2017],
+    ),
+  ),
+)
+
+// ------------------------------------------------------------
+// 14 — Box system
+// ------------------------------------------------------------
+#gh.content-slide(title: [Box system])[\
+  #gh.theorem-box(title: [Theorem 1 — Central Limit Theorem])[
+    Let $X_1, X_2, dots$ be i.i.d. random variables with mean $mu$ and
+    variance $sigma^2$. Then
+    $ sqrt(n) (overline(X)_n - mu) arrow.r.double cal(N)(0, sigma^2) $
+  ]
+
+  #gh.result-box(title: [Result — Convergence rate])[
+    The Berry–Esseen bound gives
+    $sup_x |F_n (x) - Phi(x)| <= C dot rho \/ sigma^3 sqrt(n)$
+    where $C < 0.4748$.
+  ]
+]
+
+#gh.content-slide(title: [More boxes])[\
+  #gh.remark-box(title: [Remark])[
+    The constant $C$ in the Berry–Esseen theorem has been progressively
+    tightened since 1941. The best known upper bound is due to
+    Shevtsova (2011).
+  ]
+
+  #gh.warning-box(title: [Warning — Assumptions])[
+    The CLT requires finite variance. For heavy-tailed distributions
+    (e.g. Cauchy), the theorem does not hold and alternative limit
+    theorems involving stable distributions must be used.
+  ]
+]
+
+// ------------------------------------------------------------
+// 15 — Closing
+// ------------------------------------------------------------
+
 #gh.closing-slide(
   kicker: "## Thanks",
   title: [Questions?],
