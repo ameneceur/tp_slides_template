@@ -1,5 +1,5 @@
 #import "@preview/touying:0.7.3": *
-#import "@preview/tp-slides-template:0.1.0" as tp
+#import "@preview/telepresentation:0.1.0" as tp
 
 #show: tp.register.with(
   theme:   "light",   // "light" | "dark"

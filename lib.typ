@@ -1,16 +1,16 @@
 // ============================================================
-// tp-slides-template — Télécom Paris themed slide library for Typst (Touying)
+// telepresentation — Télécom Paris themed slide library for Typst (Touying)
 // ------------------------------------------------------------
 // Ported from a React/HTML reference deck. One file, no transitive
 // imports beyond `@preview/touying`. Use it like:
 //
 //   #import "@preview/touying:0.7.3": *
-//   #import "@preview/tp-slides-template:0.1.0" as tp
+//   #import "@preview/telepresentation:0.1.0" as tp
 //
-//   #show: gh.register.with(theme: "dark", accent: "purple", density: "comfy")
+//   #show: tp.register.with(theme: "dark", accent: "purple", density: "comfy")
 //
-//   #gh.cover-slide(title: [Title], badges: ("v1.0.0", "MIT", "build: passing"))
-//   #gh.content-slide(title: [List])[
+//   #tp.cover-slide(title: [Title], badges: ("v1.0.0", "MIT", "build: passing"))
+//   #tp.content-slide(title: [List])[
 //   - first
 //   - second
 //   ]
